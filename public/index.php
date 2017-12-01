@@ -9,4 +9,5 @@ $container = require __DIR__ . '/../bootstrap/container.php';
 
 $contents = $container->get(Filesystem::class)->read('Day1/input.txt');
 
-echo $container->get(Captcha::class)->sum($contents);
+echo $container->get(Captcha::class)->sumNext($contents) . '<br>';
+echo $container->get(Captcha::class)->sumHalf($contents) . '<br>';

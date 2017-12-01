@@ -7,12 +7,23 @@ use PHPUnit\Framework\TestCase;
 
 class CaptchaTest extends TestCase
 {
-    public function testSum()
+    public function testSumNext()
     {
         $captcha = new Captcha();
 
-        $this->assertEquals(3, $captcha->sum(1122));
-        $this->assertEquals(4, $captcha->sum(1111));
-        $this->assertEquals(9, $captcha->sum(91212129));
+        $this->assertEquals(3, $captcha->sumNext(1122));
+        $this->assertEquals(4, $captcha->sumNext(1111));
+        $this->assertEquals(9, $captcha->sumNext(91212129));
+    }
+
+    public function testSumHalf()
+    {
+        $captcha = new Captcha();
+
+        $this->assertEquals(6, $captcha->sumHalf(1212));
+        $this->assertEquals(0, $captcha->sumHalf(1221));
+        $this->assertEquals(4, $captcha->sumHalf(123425));
+        $this->assertEquals(12, $captcha->sumHalf(123123));
+        $this->assertEquals(4, $captcha->sumHalf(12131415));
     }
 }
