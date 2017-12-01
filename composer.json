@@ -1,0 +1,32 @@
+{
+    "name": "robm/advent2017",
+    "description": "Advent of Code 2017",
+    "type": "project",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rob Meijer",
+            "email": "email@robmeijer.co.uk"
+        }
+    ],
+    "config": {
+        "bin-dir": "bin/"
+    },
+    "require": {
+        "league/flysystem": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Advent2017\\" : "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Advent2017\\Tests\\" : "tests/"
+        }
+    }
+}
