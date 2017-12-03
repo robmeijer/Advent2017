@@ -2,6 +2,7 @@
 
 use Advent2017\Day1\Captcha;
 use Advent2017\Day2\Checksum;
+use Advent2017\Day3\SpiralMemory;
 use League\Flysystem\Filesystem;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -13,8 +14,8 @@ $container = require __DIR__ . '/../bootstrap/container.php';
 // -----------------------------------------------------------------------------
 $contents = $container->get(Filesystem::class)->read('Day1/input.txt');
 
-echo $container->get(Captcha::class)->sumNext($contents) . '<br>';
-echo $container->get(Captcha::class)->sumHalf($contents) . '<br>';
+echo 'Day 1 Part 1: ' . $container->get(Captcha::class)->sumNext($contents) . '<br>';
+echo 'Day 1 Part 2: ' . $container->get(Captcha::class)->sumHalf($contents) . '<br>';
 
 // -----------------------------------------------------------------------------
 // ----------------------------------- DAY 2 -----------------------------------
@@ -22,5 +23,12 @@ echo $container->get(Captcha::class)->sumHalf($contents) . '<br>';
 $contents = $container->get(Filesystem::class)->read('Day2/input.txt');
 preg_match_all('/(?<rows>.+)/', $contents, $matches);
 
-echo $container->get(Checksum::class)->calculate($matches['rows']) . '<br>';
-echo $container->get(Checksum::class)->calculateDivide($matches['rows']) . '<br>';
+echo 'Day 2 Part 1: ' . $container->get(Checksum::class)->calculate($matches['rows']) . '<br>';
+echo 'Day 2 Part 2: ' . $container->get(Checksum::class)->calculateDivide($matches['rows']) . '<br>';
+
+// -----------------------------------------------------------------------------
+// ----------------------------------- DAY 3 -----------------------------------
+// -----------------------------------------------------------------------------
+$data = 361527;
+
+echo 'Day 3 Part 1: ' . $container->get(SpiralMemory::class)->calculateSteps($data) . '<br>';
