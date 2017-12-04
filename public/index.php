@@ -4,6 +4,7 @@ use Advent2017\Day1\Captcha;
 use Advent2017\Day2\Checksum;
 use Advent2017\Day3\SpiralMemory;
 use Advent2017\Day3\StressTest;
+use Advent2017\Day4\PassPhrase;
 use League\Flysystem\Filesystem;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -42,3 +43,26 @@ while ($value < $data) {
 }
 
 echo 'Day 3 Part 2: ' . $value . '<br>';
+
+// -----------------------------------------------------------------------------
+// ----------------------------------- DAY 4 -----------------------------------
+// -----------------------------------------------------------------------------
+$contents = $container->get(Filesystem::class)->read('Day4/input.txt');
+preg_match_all('/(?<rows>.+)/', $contents, $matches);
+
+$valid = 0;
+$strictValid = 0;
+foreach ($matches['rows'] as $phrase) {
+    if ($container->get(PassPhrase::class)->isValid($phrase)) {
+        $valid++;
+    }
+
+    if ($container->get(PassPhrase::class)->isStrictValid($phrase)) {
+        $strictValid++;
+    }
+}
+
+echo 'Day 4 Part 1: ' . $valid . '<br>';
+echo 'Day 4 Part 2: ' . $strictValid . '<br>';
+
+
