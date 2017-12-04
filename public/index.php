@@ -3,6 +3,7 @@
 use Advent2017\Day1\Captcha;
 use Advent2017\Day2\Checksum;
 use Advent2017\Day3\SpiralMemory;
+use Advent2017\Day3\StressTest;
 use League\Flysystem\Filesystem;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -32,3 +33,12 @@ echo 'Day 2 Part 2: ' . $container->get(Checksum::class)->calculateDivide($match
 $data = 361527;
 
 echo 'Day 3 Part 1: ' . $container->get(SpiralMemory::class)->calculateSteps($data) . '<br>';
+
+$value = 0;
+$i = 1;
+while ($value < $data) {
+    $value = $container->get(StressTest::class)->valueAtPosition($i);
+    $i++;
+}
+
+echo 'Day 3 Part 2: ' . $value . '<br>';
