@@ -5,6 +5,7 @@ use Advent2017\Day2\Checksum;
 use Advent2017\Day3\SpiralMemory;
 use Advent2017\Day3\StressTest;
 use Advent2017\Day4\PassPhrase;
+use Advent2017\Day5\JumpMaze;
 use League\Flysystem\Filesystem;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -65,4 +66,28 @@ foreach ($matches['rows'] as $phrase) {
 echo 'Day 4 Part 1: ' . $valid . '<br>';
 echo 'Day 4 Part 2: ' . $strictValid . '<br>';
 
+// -----------------------------------------------------------------------------
+// ----------------------------------- DAY 5 -----------------------------------
+// -----------------------------------------------------------------------------
+$contents = $container->get(Filesystem::class)->read('Day5/input.txt');
+preg_match_all('/(?<maze>.+)/', $contents, $matches);
 
+/** @var JumpMaze $jumpMaze */
+$jumpMaze = $container->get(JumpMaze::class, [$matches['maze']]);
+
+do {
+    $jumpMaze->updateInstruction($jumpMaze->followInstruction($jumpMaze->instruction()));
+    $jumpMaze->addStep();
+} while ($jumpMaze->inMaze());
+
+echo 'Day 5 Part 1: ' . $jumpMaze->steps() . '<br>';
+
+/** @var JumpMaze $jumpMaze */
+$jumpMaze = $container->get(JumpMaze::class, [$matches['maze']]);
+
+do {
+    $jumpMaze->updateInstruction($jumpMaze->followInstruction($jumpMaze->instruction()), true);
+    $jumpMaze->addStep();
+} while ($jumpMaze->inMaze());
+
+echo 'Day 5 Part 2: ' . $jumpMaze->steps() . '<br>';
