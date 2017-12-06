@@ -20,6 +20,11 @@ class Reallocation
     protected $sourceBank;
 
     /**
+     * @var array
+     */
+    protected $duplicate = [];
+
+    /**
      * Reallocation constructor.
      *
      * @param $banks
@@ -35,6 +40,7 @@ class Reallocation
     public function redistribute(): bool
     {
         if (in_array($this->banks, $this->cycles)) {
+            $this->duplicate = $this->banks;
             return false;
         }
 
@@ -60,6 +66,20 @@ class Reallocation
     private function findTargetBank(): int
     {
         return ($this->sourceBank === count($this->banks) - 1) ? 0 : $this->sourceBank + 1;
+    }
+
+    /**
+     * @return int
+     */
+    public function findDuplicate(): int
+    {
+        foreach ($this->cycles as $key => $bank) {
+            if ($bank === $this->duplicate) {
+                return $key;
+            }
+        }
+
+        return 0;
     }
 
     /**

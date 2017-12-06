@@ -36,4 +36,10 @@ class ReallocationTest extends TestCase
         $this->assertEquals([1, 3, 4, 1], end($cycles));
         $this->reallocation->redistribute();
     }
+
+    public function testFindDuplicate()
+    {
+        do {} while ($this->reallocation->redistribute());
+        $this->assertEquals(4, count($this->reallocation->getCycles()) - $this->reallocation->findDuplicate());
+    }
 }

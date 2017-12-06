@@ -104,3 +104,4 @@ $reallocation = $container->get(Reallocation::class, [$banks]);
 do {} while ($reallocation->redistribute());
 
 echo 'Day 6 Part 1: ' . count($reallocation->getCycles()) . '<br>';
+echo 'Day 6 Part 2: ' . (count($reallocation->getCycles()) - $reallocation->findDuplicate()) . '<br>';
