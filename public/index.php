@@ -6,6 +6,7 @@ use Advent2017\Day3\SpiralMemory;
 use Advent2017\Day3\StressTest;
 use Advent2017\Day4\PassPhrase;
 use Advent2017\Day5\JumpMaze;
+use Advent2017\Day6\Reallocation;
 use League\Flysystem\Filesystem;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -91,3 +92,15 @@ do {
 } while ($jumpMaze->inMaze());
 
 echo 'Day 5 Part 2: ' . $jumpMaze->steps() . '<br>';
+
+// -----------------------------------------------------------------------------
+// ----------------------------------- DAY 6 -----------------------------------
+// -----------------------------------------------------------------------------
+$banks = explode("\t", $container->get(Filesystem::class)->read('Day6/input.txt'));
+
+/** @var Reallocation $reallocation */
+$reallocation = $container->get(Reallocation::class, [$banks]);
+
+do {} while ($reallocation->redistribute());
+
+echo 'Day 6 Part 1: ' . count($reallocation->getCycles()) . '<br>';

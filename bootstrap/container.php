@@ -6,6 +6,7 @@ use Advent2017\Day3\SpiralMemory;
 use Advent2017\Day3\StressTest;
 use Advent2017\Day4\PassPhrase;
 use Advent2017\Day5\JumpMaze;
+use Advent2017\Day6\Reallocation;
 use League\Container\Argument\RawArgument;
 use League\Container\Container;
 use League\Flysystem\Adapter\Local;
@@ -21,5 +22,6 @@ $container->add(SpiralMemory::class);
 $container->add(StressTest::class);
 $container->add(PassPhrase::class);
 $container->add(JumpMaze::class);
+$container->add(Reallocation::class);
 
 return $container;
