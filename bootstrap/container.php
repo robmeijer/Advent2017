@@ -7,6 +7,8 @@ use Advent2017\Day3\StressTest;
 use Advent2017\Day4\PassPhrase;
 use Advent2017\Day5\JumpMaze;
 use Advent2017\Day6\Reallocation;
+use Advent2017\Day7\Program;
+use Advent2017\Day7\Programs;
 use League\Container\Argument\RawArgument;
 use League\Container\Container;
 use League\Flysystem\Adapter\Local;
@@ -23,5 +25,7 @@ $container->add(StressTest::class);
 $container->add(PassPhrase::class);
 $container->add(JumpMaze::class);
 $container->add(Reallocation::class);
+$container->add(Program::class);
+$container->add(Programs::class);
 
 return $container;

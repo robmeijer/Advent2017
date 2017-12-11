@@ -7,6 +7,8 @@ use Advent2017\Day3\StressTest;
 use Advent2017\Day4\PassPhrase;
 use Advent2017\Day5\JumpMaze;
 use Advent2017\Day6\Reallocation;
+use Advent2017\Day7\Program;
+use Advent2017\Day7\Programs;
 use League\Flysystem\Filesystem;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -14,94 +16,50 @@ require __DIR__ . '/../vendor/autoload.php';
 $container = require __DIR__ . '/../bootstrap/container.php';
 
 // -----------------------------------------------------------------------------
-// ----------------------------------- DAY 1 -----------------------------------
+// ----------------------------------- DAY 7 -----------------------------------
 // -----------------------------------------------------------------------------
-$contents = $container->get(Filesystem::class)->read('Day1/input.txt');
-
-echo 'Day 1 Part 1: ' . $container->get(Captcha::class)->sumNext($contents) . '<br>';
-echo 'Day 1 Part 2: ' . $container->get(Captcha::class)->sumHalf($contents) . '<br>';
-
-// -----------------------------------------------------------------------------
-// ----------------------------------- DAY 2 -----------------------------------
-// -----------------------------------------------------------------------------
-$contents = $container->get(Filesystem::class)->read('Day2/input.txt');
+$contents = $container->get(Filesystem::class)->read('Day7/input.txt');
 preg_match_all('/(?<rows>.+)/', $contents, $matches);
 
-echo 'Day 2 Part 1: ' . $container->get(Checksum::class)->calculate($matches['rows']) . '<br>';
-echo 'Day 2 Part 2: ' . $container->get(Checksum::class)->calculateDivide($matches['rows']) . '<br>';
-
-// -----------------------------------------------------------------------------
-// ----------------------------------- DAY 3 -----------------------------------
-// -----------------------------------------------------------------------------
-$data = 361527;
-
-echo 'Day 3 Part 1: ' . $container->get(SpiralMemory::class)->calculateSteps($data) . '<br>';
-
-$value = 0;
-$i = 1;
-while ($value < $data) {
-    $value = $container->get(StressTest::class)->valueAtPosition($i);
-    $i++;
-}
-
-echo 'Day 3 Part 2: ' . $value . '<br>';
-
-// -----------------------------------------------------------------------------
-// ----------------------------------- DAY 4 -----------------------------------
-// -----------------------------------------------------------------------------
-$contents = $container->get(Filesystem::class)->read('Day4/input.txt');
-preg_match_all('/(?<rows>.+)/', $contents, $matches);
-
-$valid = 0;
-$strictValid = 0;
-foreach ($matches['rows'] as $phrase) {
-    if ($container->get(PassPhrase::class)->isValid($phrase)) {
-        $valid++;
+/** @var Programs $programs */
+$programs = $container->get(Programs::class);
+$childrenData = [];
+foreach ($matches['rows'] as $row) {
+    preg_match('/(?<name>[a-z]+) \((?<weight>\d+)\)(?: -> )?(?<children>.+)?/', $row, $input);
+    $programs->addProgram(new Program($input['name'], $input['weight']));
+    if (isset($input['children'])) {
+        $childrenData[$input['name']] = explode(', ', $input['children']);
     }
+};
 
-    if ($container->get(PassPhrase::class)->isStrictValid($phrase)) {
-        $strictValid++;
-    }
-}
+$programs->addChildren($childrenData);
 
-echo 'Day 4 Part 1: ' . $valid . '<br>';
-echo 'Day 4 Part 2: ' . $strictValid . '<br>';
+/** @var Program $program wiapi */
+$program = current($programs->getPrograms());
+$program->calculateWeights();
 
-// -----------------------------------------------------------------------------
-// ----------------------------------- DAY 5 -----------------------------------
-// -----------------------------------------------------------------------------
-$contents = $container->get(Filesystem::class)->read('Day5/input.txt');
-preg_match_all('/(?<maze>.+)/', $contents, $matches);
-
-/** @var JumpMaze $jumpMaze */
-$jumpMaze = $container->get(JumpMaze::class, [$matches['maze']]);
+$unbalanced = true;
 
 do {
-    $jumpMaze->updateInstruction($jumpMaze->followInstruction($jumpMaze->instruction()));
-    $jumpMaze->addStep();
-} while ($jumpMaze->inMaze());
+    $counts = array_count_values($program->getChildWeights());
+    $counts = array_flip($counts);
 
-echo 'Day 5 Part 1: ' . $jumpMaze->steps() . '<br>';
+    if (isset($counts[1])) {
+        $parent = $program;
+        $childName = array_search($counts[1], $program->getChildWeights());
+        /** @var Program $child */
+        foreach ($parent->getChildren() as $child) {
+            if ($child->getName() !== $childName) {
+                $goodWeight = $child->getTotalWeight();
+            }
+        }
 
-/** @var JumpMaze $jumpMaze */
-$jumpMaze = $container->get(JumpMaze::class, [$matches['maze']]);
+        $program = $program->getChild($childName);
+    } else {
+        $unbalanced = false;
+    }
+} while ($unbalanced);
 
-do {
-    $jumpMaze->updateInstruction($jumpMaze->followInstruction($jumpMaze->instruction()), true);
-    $jumpMaze->addStep();
-} while ($jumpMaze->inMaze());
-
-echo 'Day 5 Part 2: ' . $jumpMaze->steps() . '<br>';
-
-// -----------------------------------------------------------------------------
-// ----------------------------------- DAY 6 -----------------------------------
-// -----------------------------------------------------------------------------
-$banks = explode("\t", $container->get(Filesystem::class)->read('Day6/input.txt'));
-
-/** @var Reallocation $reallocation */
-$reallocation = $container->get(Reallocation::class, [$banks]);
-
-do {} while ($reallocation->redistribute());
-
-echo 'Day 6 Part 1: ' . count($reallocation->getCycles()) . '<br>';
-echo 'Day 6 Part 2: ' . (count($reallocation->getCycles()) - $reallocation->findDuplicate()) . '<br>';
+echo '<pre>';
+print_r($program->getWeight() + ($goodWeight - $program->getTotalWeight()));
+exit();
