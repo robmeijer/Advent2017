@@ -1,37 +1,38 @@
-# PHP CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-php/ for more details
-#
 version: 2
 jobs:
     build:
-        docker:
-            # specify the version you desire here
-            - image: circleci/php:7.1-browsers
-
-            # Specify service dependencies here if necessary
-            # CircleCI maintains a library of pre-built images
-            # documented at https://circleci.com/docs/2.0/circleci-images/
-            # - image: circleci/mysql:9.4
-
         working_directory: ~/repo
-
+        docker:
+            - image: circleci/php:7.1-browsers
         steps:
             - checkout
-
-            # Download and cache dependencies
             - restore_cache:
                 keys:
-                - v1-dependencies-{{ checksum "composer.lock" }}
-                # fallback to using the latest cache if no exact match is found
-                - v1-dependencies-
-
+                - vendor-{{ checksum "composer.lock" }}
             - run: composer install -n --prefer-dist
-
             - save_cache:
+                key: vendor-{{ checksum "composer.lock" }}
                 paths:
-                    - ./vendor
-                key: v1-dependencies-{{ checksum "composer.lock" }}
-
-            # run tests!
-            - run: ./bin/phpunit
+                    - vendor
+    test:
+        docker:
+            - image: circleci/php:7.1-browsers
+        steps:
+            - checkout
+            - run:
+                name: Run tests
+                command: ./bin/phpunit --log-junit junit.xml
+            - store_artifacts:
+                path: junit.xml
+                prefix: tests
+workflows:
+    version: 2
+    build_and_test:
+        jobs:
+            - build
+            - test:
+                requires:
+                    - build
+                filters:
+                    branches:
+                        only: master
