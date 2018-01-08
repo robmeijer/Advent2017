@@ -32,7 +32,7 @@ class JumpMazeTest extends TestCase
         $this->jumpMaze->updateInstruction($position);
 
         $position = $this->jumpMaze->followInstruction($this->jumpMaze->instruction());
-        $this->assertEquals(4, $position);
+        $this->assertEquals(3, $position);
         $this->jumpMaze->updateInstruction($position);
 
         $position = $this->jumpMaze->followInstruction($this->jumpMaze->instruction());
