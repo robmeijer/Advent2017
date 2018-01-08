@@ -19,6 +19,14 @@ jobs:
             - image: circleci/php:7.1-browsers
         steps:
             - checkout
+            - restore_cache:
+                keys:
+                - vendor-{{ checksum "composer.lock" }}
+            - run: composer install -n --prefer-dist
+            - save_cache:
+                key: vendor-{{ checksum "composer.lock" }}
+                paths:
+                    - vendor
             - run:
                 name: Run tests
                 command: ./bin/phpunit --log-junit junit.xml
