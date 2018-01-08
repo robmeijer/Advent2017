@@ -63,7 +63,7 @@ jobs:
                     key: v1-dependencies-{{ checksum "composer.lock" }}
 
                 # run tests!
-                - run: mkdir -p $CIRCLE_TEST_REPORTS/phpunit; ./bin/phpunit --log-junit $CIRCLE_TEST_REPORTS/phpunit/junit.xml
+                - run: mkdir -p .circle/reports/phpunit; ./bin/phpunit --log-junit .circle/reports/phpunit/junit.xml
 
 workflows:
     version: 2
